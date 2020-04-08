@@ -24,25 +24,81 @@ $(document).ready(function() {
     //     }
     // });
 
-    $.ajax({
-        url: "http://157.230.17.132:4004/sales",
-        method: "GET",
-        success: function (data) {
-            // console.log(data);
-        var salesData = data;
-        // console.log(salesData);
-        // getTotalAmounts(getAmounts(salesData));
-        // getSalesmen(salesData);
-        // getDate(salesData);
-        // getId(salesData);
-        getSalesPerMonth(getMonthAndSales(salesData));
-        getSalesPerSalesman(salesData);
+    makeChart();
 
-        },
-        error: function () {
-            alert('BOOM');
-        }
-    })
+    // $('#send-sales').click(function() {
+    //     var newSalesman = $('#new-salesman').val();
+    //     var newAmount = parseInt($('#new-amount').val());
+    //     var newDate = moment($('#new-date').val()).format('L');
+    //     var newObject = {
+    //         salesman: newSalesman,
+    //         amount: newAmount,
+    //         date: newDate
+    //     };
+    //     console.log(newSalesman);
+    //     console.log(newAmount);
+    //     console.log(newDate);
+    //     console.log(newObject);
+    //     $.ajax({
+    //         url: "http://157.230.17.132:4004/sales",
+    //         method: "POST",
+    //         data: newObject,
+    //         success: function (data) {
+    //             makeChart();
+    //         },
+    //         error: function () {
+    //             alert('BOOM');
+    //         }
+    //     })
+    // });
+
+    function makeChart() {
+        $.ajax({
+            url: "http://157.230.17.132:4004/sales",
+            method: "GET",
+            success: function (data) {
+                // console.log(data);
+            var salesData = data;
+            var salesPerMonth = getSalesPerMonth(getMonthAndSales(salesData));
+            var salesPerSalesman = getSalesPerSalesman(salesData);
+            // console.log(salesData);
+            // getTotalAmounts(getAmounts(salesData));
+            // getSalesmen(salesData);
+            // getDate(salesData);
+            // getId(salesData);
+            var perc = getSalesPercentage(getSalesPerSalesman(salesData), getTotalAmounts(getAmounts(salesData)));
+            makeLineChart(salesPerMonth.month, salesPerMonth.amount);
+            makePieChart(salesPerSalesman.salesman, perc);
+
+            },
+            error: function () {
+                alert('BOOM');
+            }
+        })
+    }
+
+    // $.ajax({
+    //     url: "http://157.230.17.132:4004/sales",
+    //     method: "GET",
+    //     success: function (data) {
+    //         // console.log(data);
+    //     var salesData = data;
+    //     var salesPerMonth = getSalesPerMonth(getMonthAndSales(salesData));
+    //     var salesPerSalesman = getSalesPerSalesman(salesData);
+    //     // console.log(salesData);
+    //     // getTotalAmounts(getAmounts(salesData));
+    //     // getSalesmen(salesData);
+    //     // getDate(salesData);
+    //     // getId(salesData);
+    //     var perc = getSalesPercentage(getSalesPerSalesman(salesData), getTotalAmounts(getAmounts(salesData)));
+    //     makeLineChart(salesPerMonth.month, salesPerMonth.amount);
+    //     makePieChart(salesPerSalesman.salesman, perc);
+    //
+    //     },
+    //     error: function () {
+    //         alert('BOOM');
+    //     }
+    // })
 
     function getMonthAndSales(data) {
         var monthSales = [];
@@ -82,7 +138,10 @@ $(document).ready(function() {
             month.push(key);
             amount.push(salesPerMonth[key]);
         }
-        makeLineChart(month, amount)
+        return {
+            month: month,
+            amount: amount
+        }
     }
 
     function getSalesPerSalesman(data) {
@@ -107,7 +166,21 @@ $(document).ready(function() {
         }
         // console.log(salesman);
         // console.log(amount);
-        makePieChart(salesman, amount)
+        return {
+            salesman: salesman,
+            amount: amount
+        }
+    }
+
+    function getSalesPercentage(data, total) {
+        var salesPercentage = data.amount;
+        var arrayPerc =[];
+        for (var i = 0; i < salesPercentage.length; i++) {
+            salesPercentage[i] = ((salesPercentage[i]/total)*100).toFixed(2);
+            arrayPerc.push(salesPercentage[i]);
+        }
+        // console.log(arrayPerc);
+        return arrayPerc
     }
 
     function makeLineChart(data1, data2) {
@@ -120,8 +193,9 @@ $(document).ready(function() {
                 labels: data1,
                 datasets: [{
                     label: 'Fatturato',
-                    backgroundColor: 'powderblue',
-                    borderColor: 'powderblue',
+                    backgroundColor: 'rgba(176,224,230,0.5)',
+                    borderColor: 'rgba(176,224,230,1)',
+                    lineTension: 0,
                     data: data2
                 }]
             }
@@ -167,7 +241,6 @@ $(document).ready(function() {
             var amount = singleData.amount;
             amounts.push(amount);
         }
-        console.log(amounts);
         return amounts;
     }
 

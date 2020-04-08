@@ -11,14 +11,28 @@
         <title>Chart Es</title>
     </head>
     <body>
-
+    <header>
+        <div class="new-sales">
+            <h2>Inserisci nuova vendita</h2>
+            <input id="new-salesman"type="text" placeholder="Inserisci il nome del venditore">
+            <br>
+            <input id="new-amount" placeholder="Inserisci il valore della vendita">
+            <br>
+            <input id="new-date"type="date">
+            <br>
+            <button id="send-sales">Invia i dati</button>
+        </div>
+    </header>
     <div class="container">
-        <div class="chart-container">
-            <canvas id="line-chart"></canvas>
+        <div class="all-chart">
+            <div class="chart-container">
+                <canvas id="line-chart"></canvas>
+            </div>
+            <div class="chart-container">
+                <canvas id="pie-chart"></canvas>
+            </div>
         </div>
-        <div class="chart-container">
-            <canvas id="pie-chart"></canvas>
-        </div>
+
     </div>
 
 
