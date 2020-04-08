@@ -26,39 +26,40 @@ $(document).ready(function() {
 
     makeChart();
 
-    // $('#send-sales').click(function() {
-    //     var newSalesman = $('#new-salesman').val();
-    //     var newAmount = parseInt($('#new-amount').val());
-    //     var newDate = moment($('#new-date').val()).format('L');
-    //     var newObject = {
-    //         salesman: newSalesman,
-    //         amount: newAmount,
-    //         date: newDate
-    //     };
-    //     console.log(newSalesman);
-    //     console.log(newAmount);
-    //     console.log(newDate);
-    //     console.log(newObject);
-    //     $.ajax({
-    //         url: "http://157.230.17.132:4004/sales",
-    //         method: "POST",
-    //         data: newObject,
-    //         success: function (data) {
-    //             makeChart();
-    //         },
-    //         error: function () {
-    //             alert('BOOM');
-    //         }
-    //     })
-    // });
+    $('#send-sales').click(function() {
+        var newSalesman = $('#new-salesman').val();
+        var newAmount = parseInt($('#new-amount').val());
+        var newDate = moment($('#new-date').val()).format('L');
+        var newObject = {
+            salesman: newSalesman,
+            amount: newAmount,
+            date: newDate
+        };
+        console.log(newSalesman);
+        console.log(newAmount);
+        console.log(newDate);
+        console.log(newObject);
+        $.ajax({
+            url: "http://157.230.17.132:4004/sales",
+            method: "POST",
+            data: newObject,
+            success: function (data) {
+                makeChart();
+            },
+            error: function () {
+                alert('BOOM');
+            }
+        })
+    });
 
     function makeChart() {
         $.ajax({
             url: "http://157.230.17.132:4004/sales",
             method: "GET",
             success: function (data) {
-                // console.log(data);
-            var salesData = data;
+                console.log(data);
+            var dataToFormat = data;
+            var salesData = formatData(dataToFormat);
             var salesPerMonth = getSalesPerMonth(getMonthAndSales(salesData));
             var salesPerSalesman = getSalesPerSalesman(salesData);
             // console.log(salesData);
@@ -69,6 +70,10 @@ $(document).ready(function() {
             var perc = getSalesPercentage(getSalesPerSalesman(salesData), getTotalAmounts(getAmounts(salesData)));
             makeLineChart(salesPerMonth.month, salesPerMonth.amount);
             makePieChart(salesPerSalesman.salesman, perc);
+            console.log(salesPerMonth);
+            console.log(salesPerSalesman);
+            console.log(perc);
+            console.log(salesData);
 
             },
             error: function () {
@@ -99,6 +104,17 @@ $(document).ready(function() {
     //         alert('BOOM');
     //     }
     // })
+
+    function formatData(data) {
+        for (var i = 0; i < data.length; i++) {
+            var objectToFormat = data[i];
+            if (!isNaN(objectToFormat.amount)) {
+                objectToFormat.amount = parseInt(objectToFormat.amount);
+            }
+        }
+        console.log(objectToFormat);
+        return data
+    }
 
     function getMonthAndSales(data) {
         var monthSales = [];
@@ -192,7 +208,7 @@ $(document).ready(function() {
             data: {
                 labels: data1,
                 datasets: [{
-                    label: 'Fatturato',
+                    label: 'Fatturato 2017',
                     backgroundColor: 'rgba(176,224,230,0.5)',
                     borderColor: 'rgba(176,224,230,1)',
                     lineTension: 0,
