@@ -35,6 +35,7 @@ $(document).ready(function() {
             amount: newAmount,
             date: newDate
         };
+        $('input').val('');
         console.log(newSalesman);
         console.log(newAmount);
         console.log(newDate);
