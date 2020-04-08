@@ -136,7 +136,7 @@ $(document).ready(function() {
 
             data : {
                 datasets: [{
-                    data: data1,
+                    data: data2,
                     backgroundColor: [
                         'powderblue',
                         'lightcoral',
@@ -144,7 +144,7 @@ $(document).ready(function() {
                         'darkviolet'
                     ]
                 }],
-                labels: data2
+                labels: data1
             }
         });
     }
