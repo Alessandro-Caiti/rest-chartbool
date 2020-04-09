@@ -236,6 +236,16 @@ $(document).ready(function() {
                     ]
                 }],
                 labels: data1
+            },
+            options: { //chiamata options default per avere l'aggiunta di "%" alla fine del numero
+                responsive: true,
+                tooltips: {
+                  callbacks: {
+                    label: function(tooltipItem, data) {
+                      return data['labels'][tooltipItem['index']] + ': ' + data['datasets'][0]['data'][tooltipItem['index']] + '%';
+                    }
+                  }
+                }
             }
         });
     }
